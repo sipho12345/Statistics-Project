@@ -1,0 +1,52 @@
+#QUESTION 1
+
+mydata = read.table("c:\\assignment\\incexp.txt",header=TRUE)
+age = mydata$AGE[1:100]
+mydataplot = plot(mydata)
+boxplot1 = boxplot.default(mydata$AGE)
+hhinc = mydata$HHINCOME[1:30]
+hist(age,col="blue")
+hist(hhinc,col="blue" )
+mean(age)
+sample_median = median(age)
+summary(age)
+show(age)
+
+#Bootstraping for mean
+set.seed(1000)
+BootStrapSamples = replicate(4000, mean(sample(age, 100, replace = TRUE)))
+x = length(BootStrapSamples)
+bstrm = mean(BootStrapSamples)
+bstrm
+bstsd = sd(BootStrapSamples)
+hist(BootStrapSamples, col="blue")
+sortmean = sort(BootStrapSamples)
+sortmean
+count=length(sortmean[sortmean>43])
+bst_pval=count/4000
+bst_pval
+cat("(",sortmean[0.025*4000],",",sortmean[0.975*4000],")")
+
+#Bootstraping for meadians
+set.seed(1000)
+BootStrapSamples_median = replicate(4000, median(sample(hhinc, 30, replace = TRUE)))
+x = length(BootStrapSamples)
+medianbsrt= median(BootStrapSamples_median)
+sortmedian = sort(BootStrapSamples_median)
+sortmedian
+
+#Lower and Upper median
+lowermedian = sortmedian[0.10*4000]
+uppermedian = sortmedian[0.90*4000]
+
+#Lower and Upper Error
+lowerError = medianbsrt-lowermedian
+upperError = medianbsrt-uppermedian
+
+#Lower and Upper Bounds
+lowerB = upperError-sample_median
+upperB = lowerError-sample_median
+
+#Confidence Interval
+cat("(",lowerB,",",upperB,")")
+
